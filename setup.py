@@ -16,7 +16,7 @@ def get_long_description():
 
 setup(
     name='bump-anything',
-    version='1.0.0',
+    version='1.0.0.post1',
     description='A CLI utility for bumping the version of any file type',
     long_description=get_long_description(),
     url='https://github.com/caleb531/bump-anything',
