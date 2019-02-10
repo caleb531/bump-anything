@@ -41,4 +41,11 @@ bump minor
 bump patch
 ```
 
-Bump Anything 
+With this syntax, Bump Anything will do its best to find the relevant files to
+bump. However, Bump Anything can also accept an optional list of one or more
+file paths whose versions to bump. Only the first occurrence of the version
+field in each file will be updated.
+
+```
+bump minor subdir/myfile1.txt subdir/myfile2.txt
+```
