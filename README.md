@@ -19,7 +19,7 @@ Bump Anything requires Python 3.4 or newer to run, so please ensure you have it
 installed.
 
 ```sh
-pip install bump-anything
+pip3 install bump-anything
 ```
 
 ## Usage
