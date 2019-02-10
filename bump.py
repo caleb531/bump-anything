@@ -1,7 +1,4 @@
-#!/usr/local/bin/python3
-
-# The above shebang must not use /usr/bin/env, otherwise running this tool
-# within an active virtualenv will fail
+#!/usr/bin/env python3
 
 import argparse
 import glob
