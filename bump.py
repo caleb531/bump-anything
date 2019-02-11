@@ -5,10 +5,12 @@ import glob
 import os
 import os.path
 import re
-import semver
 import sys
 from contextlib import suppress
 from functools import partial
+
+import semver
+
 
 # The regular expression pattern used to match the version to be incremented
 # within any given file of any type
