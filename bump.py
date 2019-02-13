@@ -33,8 +33,8 @@ def bump_version(version, increment_type):
 # The callback function for the substitution call that locates and increments
 # the version in-place
 def replace_version(increment_type, file_path, version_match):
-    old_version = version_match['version']
-    semantic_version = version_match['semver']
+    old_version = version_match.get('version')
+    semantic_version = version_match.get('semver')
     new_version = bump_version(semantic_version, increment_type)
     print('{}: {} -> {}'.format(file_path, old_version, new_version))
     return ''.join((
