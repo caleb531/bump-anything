@@ -25,7 +25,9 @@ setup(
     license='MIT',
     keywords='semver semantic version bump increment',
     py_modules=['bump'],
-    install_requires=[],
+    install_requires=[
+        'semver >= 2, < 3'
+    ],
     entry_points={
         'console_scripts': [
             'bump=bump:main'
