@@ -6,12 +6,8 @@ from setuptools import setup
 
 # Get long description (used on PyPI project page)
 def get_long_description():
-    try:
-        # Use pandoc to create reStructuredText README if possible
-        import pypandoc
-        return pypandoc.convert_file('README.md', 'rst')
-    except Exception:
-        return None
+    with open('README.md', 'r') as readme_file:
+        return readme_file.read()
 
 
 setup(
