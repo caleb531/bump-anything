@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-import glob
 import os
 import os.path
 import re
 import sys
-from contextlib import suppress
 from functools import partial
 
 import semver
@@ -59,27 +57,11 @@ def bump_version_for_file(increment_type, file_path):
             print("{}: could not find version info".format(file_path), file=sys.stderr)
 
 
-# Retrieve the path to the nearest SuiteCommerce Advanced extension/theme
-# directory
-def get_sca_extension_dir():
-    workspace_subdirs = glob.glob("Workspace/*/")
-    with suppress(ValueError):
-        workspace_subdirs.remove("Workspace/Extras/")
-    if workspace_subdirs:
-        return workspace_subdirs[0]
-    else:
-        print("cannot locate SCA extension/theme directory", file=sys.stderr)
-
-
 # Find files in the current project (according to the project type) that
 # include version information
 def populate_file_paths(file_paths):
     # Get the name of the project directory
     project_name = os.path.basename(os.getcwd())
-    # If a SuiteCommerce Advanced extension/theme
-    if os.path.exists("Workspace"):
-        file_paths.append(os.path.join(get_sca_extension_dir(), "manifest.json"))
-        return
     # If a Node project
     if os.path.exists("package.json"):
         file_paths.append("package.json")
