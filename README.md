@@ -15,7 +15,7 @@ different types of projects.
 
 ## Installation
 
-Bump Anything requires Python 3.4 or newer to run, so please ensure you have it
+Bump Anything requires Python 3.9 or newer to run, so please ensure you have it
 installed.
 
 ```sh
