@@ -1,0 +1,29 @@
+[project]
+name = "bump-anything"
+version = "2.0.0-beta.1"
+description = "A CLI utility for bumping the version of any file type"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Caleb Evans", email = "caleb@calebevans.me" }
+]
+maintainers = [
+    {name = 'Caleb Evans', email = 'caleb@calebevans.me'}
+]
+license = {file = 'LICENSE.txt'}
+keywords = ["semver", "semantic", "version", "bump", "increment"]
+dependencies=[
+    "semver >= 3"
+]
+
+[project.urls]
+homepage = "https://github.com/caleb531/bump-anything"
+documentation = "https://github.com/caleb531/bump-anything#readme"
+repository = "https://github.com/caleb531/bump-anything"
+changelog = "https://github.com/caleb531/bump-anything/releases"
+
+[project.scripts]
+bump = "bump.main:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
