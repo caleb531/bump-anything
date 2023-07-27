@@ -95,6 +95,8 @@ def populate_file_paths(file_paths):
     # If a Python project
     if os.path.exists("setup.py"):
         file_paths.append("setup.py")
+    if os.path.exists("pyproject.toml"):
+        file_paths.append("pyproject.toml")
 
 
 def parse_cli_args():
