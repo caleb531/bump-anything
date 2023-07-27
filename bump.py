@@ -17,6 +17,24 @@ VERSION_PATT = r"({key}\s*[=:]\s*([\"\']?)){value}(\3\s*)".format(
 )
 
 
+def get_auto_detectable_file_names():
+    # Get the name of the project directory
+    project_name = os.path.basename(os.getcwd())
+    return (
+        # If a Node project
+        "package.json",
+        # If Node project contains a lockfile
+        "package-lock.json",
+        # If a WordPress theme
+        "style.css",
+        # If a WordPress plugin
+        "{}.php".format(project_name),
+        # If a Python project
+        "setup.py",
+        "pyproject.toml",
+    )
+
+
 # Increment the major, minor, or patch part of the given version string and
 # return the incremented version
 def bump_version(version, increment_type):
@@ -59,26 +77,12 @@ def bump_version_for_file(increment_type, file_path):
 
 # Find files in the current project (according to the project type) that
 # include version information
-def populate_file_paths(file_paths):
-    # Get the name of the project directory
-    project_name = os.path.basename(os.getcwd())
-    # If a Node project
-    if os.path.exists("package.json"):
-        file_paths.append("package.json")
-    # If Node project contains a lockfile
-    if os.path.exists("package-lock.json"):
-        file_paths.append("package-lock.json")
-    # If a WordPress theme
-    if os.path.exists("style.css"):
-        file_paths.append("style.css")
-    # If a WordPress plugin
-    if os.path.exists("{}.php".format(project_name)):
-        file_paths.append("{}.php".format(project_name))
-    # If a Python project
-    if os.path.exists("setup.py"):
-        file_paths.append("setup.py")
-    if os.path.exists("pyproject.toml"):
-        file_paths.append("pyproject.toml")
+def get_default_file_paths():
+    return [
+        file_name
+        for file_name in get_auto_detectable_file_names()
+        if os.path.exists(file_name)
+    ]
 
 
 def parse_cli_args():
@@ -92,12 +96,14 @@ def parse_cli_args():
 
 def main():
     args = parse_cli_args()
-    if not args.file_paths:
-        populate_file_paths(args.file_paths)
+    if args.file_paths:
+        file_paths = get_default_file_paths
+    else:
+        file_paths = get_default_file_paths()
     if not args.file_paths:
         print("cannot locate file(s) to bump", file=sys.stderr)
         sys.exit(1)
-    for file_path in args.file_paths:
+    for file_path in file_paths:
         try:
             bump_version_for_file(
                 file_path=file_path, increment_type=args.increment_type
