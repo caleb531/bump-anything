@@ -100,7 +100,7 @@ def main():
         file_paths = args.file_paths
     else:
         file_paths = get_default_file_paths()
-    if not args.file_paths:
+    if not file_paths:
         print("cannot locate file(s) to bump", file=sys.stderr)
         sys.exit(1)
     for file_path in file_paths:
