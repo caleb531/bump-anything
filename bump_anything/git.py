@@ -4,7 +4,10 @@ import subprocess
 
 
 def run_git_command(subcommand, *args):
-    print(subprocess.check_output(["git", subcommand, *args]).decode("utf-8"))
+    print(
+        subprocess.check_output(["git", subcommand, *args]).decode("utf-8"),
+        end="",
+    )
 
 
 def add(file_paths):
