@@ -9,6 +9,9 @@ from functools import partial
 
 import semver
 
+import bump_anything.git as git
+from bump_anything.file_result import FileResult
+
 # The regular expression pattern used to match the version to be incremented
 # within any given file of any type
 VERSION_PATT = r"({key}\s*[=:]\s*([\"\']?)){value}(\3\s*)".format(
@@ -91,16 +94,17 @@ def bump_version_for_file(version_specifier, file_path):
                 new_file_contents,
             ) = replace_version_in_file_contents(file_contents, version_specifier)
             if not current_version:
-                return False
+                return (False, None, None)
             if new_file_contents == file_contents:
-                return False
+                return (False, None, None)
             file.truncate(0)
             file.seek(0)
             file.write(new_file_contents)
             print("{}: {} -> {}".format(file_path, current_version, new_version))
-            return True
+            return (True, current_version, new_version)
     except FileNotFoundError:
         print("{}: file not found".format(file_path), file=sys.stderr)
+        return (False, None, None)
 
 
 # Find files in the current project (according to the project type) that
@@ -111,6 +115,26 @@ def get_default_file_paths():
         for file_name in get_auto_detectable_file_names()
         if os.path.exists(file_name)
     ]
+
+
+def abort_if_version_mismatch(file_results):
+    if len(set(result.new_version for result in file_results)) > 1:
+        print(
+            "Aborting commit because not all bumped versions are equal", file=sys.stderr
+        )
+
+
+def handle_git_operations(file_results, commit_message, should_tag=False):
+    abort_if_version_mismatch(file_results)
+    changed_result_paths = [result.file_path for result in file_results]
+    git.add(changed_result_paths)
+    print(f"Staging {', '.join(changed_result_paths)}")
+    git.commit(commit_message)
+    new_version = file_results[0].new_version
+    if should_tag:
+        tag_name = f"v{new_version}"
+        git.tag(tag_name)
+        print("Tagging commit as {tag_name}")
 
 
 def version_specifier(arg_value):
@@ -134,30 +158,38 @@ def parse_cli_args():
         type=os.path.expanduser,
         default=get_default_file_paths(),
     )
-    parser.add_argument("--no-commit", action="store_true")
+    parser.add_argument("--no-commit", "-n", action="store_true")
     parser.add_argument("--no-tag", action="store_true")
+    parser.add_argument("--commit-message", "-m")
     return parser.parse_args()
 
 
 def main():
     args = parse_cli_args()
-    changed_any_version = False
-    changed_file_paths = []
-    print(args)
+    did_any_version_change = False
+    file_results = []
     for file_path in args.file_paths:
-        changed_version = bump_version_for_file(
+        did_version_change, current_version, new_version = bump_version_for_file(
             file_path=file_path, version_specifier=args.version_specifier
         )
-        if changed_version:
-            changed_file_paths.append(file_path)
-            changed_any_version = True
-    if not changed_any_version:
+        if did_version_change:
+            file_results.append(
+                FileResult(
+                    file_path=file_path,
+                    current_version=current_version,
+                    new_version=new_version,
+                )
+            )
+            did_any_version_change = True
+    if not did_any_version_change:
         print("No files updated")
         return
     if not args.no_commit:
-        print("TODO: commit version bump")
-    if not args.no_commit and not args.no_tag:
-        print("TODO: tag version bump")
+        handle_git_operations(
+            file_results=file_results,
+            commit_message=args.commit_message or f"Prepare {new_version} release",
+            should_tag=not args.no_tag,
+        )
 
 
 if __name__ == "__main__":
