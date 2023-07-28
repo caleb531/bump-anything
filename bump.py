@@ -78,11 +78,11 @@ def bump_version_for_file(increment_type, file_path):
 # Find files in the current project (according to the project type) that
 # include version information
 def get_default_file_paths():
-    return [
+    return (
         file_name
         for file_name in get_auto_detectable_file_names()
         if os.path.exists(file_name)
-    ]
+    )
 
 
 def parse_cli_args():
