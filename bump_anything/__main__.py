@@ -68,8 +68,7 @@ def bump_version_for_file(version_specifier, file_path):
         file_contents = file.read()
         version_matches = re.search(VERSION_PATT, file_contents)
         if not version_matches:
-            print("{}: could not find version info".format(file_path), file=sys.stderr)
-            return
+            return False
         old_version = version_matches.group("version")
         new_version = bump_version(old_version, version_specifier)
         new_file_contents = re.sub(
@@ -80,11 +79,12 @@ def bump_version_for_file(version_specifier, file_path):
             count=1,
         )
         if new_file_contents == file_contents:
-            return
+            return False
         file.truncate(0)
         file.seek(0)
         file.write(new_file_contents)
         print("{}: {} -> {}".format(file_path, old_version, new_version))
+        return True
 
 
 # Find files in the current project (according to the project type) that
@@ -101,7 +101,9 @@ def version_specifier(arg_value):
     if arg_value in INCREMENT_TYPES or semver.Version.is_valid(arg_value):
         return arg_value
     else:
-        raise argparse.ArgumentTypeError("invalid version specifier (must be )")
+        raise argparse.ArgumentTypeError(
+            "invalid version specifier (must be a valid semantic version)"
+        )
 
 
 def parse_cli_args():
@@ -122,13 +124,16 @@ def main():
     if not file_paths:
         print("cannot locate file(s) to bump", file=sys.stderr)
         sys.exit(1)
+    changed_version = False
     for file_path in file_paths:
         try:
-            bump_version_for_file(
+            changed_version = changed_version or bump_version_for_file(
                 file_path=file_path, version_specifier=args.version_specifier
             )
         except FileNotFoundError:
             print("{}: file not found".format(file_path), file=sys.stderr)
+    if not changed_version:
+        print("No files updated")
 
 
 if __name__ == "__main__":
