@@ -31,16 +31,20 @@ Bump Anything exposes to your shell a `bump-anything` command (also aliased to
 increment each version. It can be either `major`, `minor`, or `patch`.
 
 
-```
-bump major
-```
-
-```
-bump minor
+```sh
+bump major # 1.2.3 -> 2.0.0
 ```
 
+```sh
+bump minor # 1.2.3 -> 1.3.0
 ```
-bump patch
+
+```sh
+bump patch # 1.2.3 -> 1.2.4
+```
+
+```sh
+bump prerelease # 1.2.3-beta.1 -> 1.2.3-beta.2
 ```
 
 With this syntax, Bump Anything will do its best to find the relevant files to

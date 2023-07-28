@@ -44,6 +44,8 @@ def bump_version(version, increment_type):
         return semver.bump_minor(version)
     elif increment_type == "patch":
         return semver.bump_patch(version)
+    elif increment_type == "prerelease":
+        return semver.bump_prerelease(version)
 
 
 # The callback function for the substitution call that locates and increments
@@ -89,7 +91,9 @@ def get_default_file_paths():
 
 def parse_cli_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("increment_type", choices=("major", "minor", "patch"))
+    parser.add_argument(
+        "increment_type", choices=("major", "minor", "patch", "prerelease")
+    )
     parser.add_argument(
         "file_paths", metavar="file", nargs="*", type=os.path.expanduser
     )
