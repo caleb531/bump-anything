@@ -124,17 +124,20 @@ def abort_if_version_mismatch(file_results):
         )
 
 
-def handle_git_operations(file_results, commit_message, should_tag=False):
+def handle_git_operations(
+    file_results, commit_message, tag_name=None, should_tag=False
+):
     abort_if_version_mismatch(file_results)
     changed_result_paths = [result.file_path for result in file_results]
     git.add(changed_result_paths)
     print(f"Staging {', '.join(changed_result_paths)}")
     git.commit(commit_message)
-    new_version = file_results[0].new_version
-    if should_tag:
-        tag_name = f"v{new_version}"
-        git.tag(tag_name)
-        print("Tagging commit as {tag_name}")
+    if not should_tag:
+        return
+    did_tag = git.tag(tag_name)
+    if not did_tag:
+        return
+    print(f"Tagging commit as {tag_name}")
 
 
 def version_specifier(arg_value):
@@ -161,6 +164,7 @@ def parse_cli_args():
     parser.add_argument("--no-commit", "-n", action="store_true")
     parser.add_argument("--no-tag", action="store_true")
     parser.add_argument("--commit-message", "-m")
+    parser.add_argument("--tag-name", "-t")
     return parser.parse_args()
 
 
@@ -185,9 +189,11 @@ def main():
         print("No files updated")
         return
     if not args.no_commit:
+        new_version = file_results[0].new_version
         handle_git_operations(
             file_results=file_results,
             commit_message=args.commit_message or f"Prepare {new_version} release",
+            tag_name=args.tag_name or f"v{new_version}",
             should_tag=not args.no_tag,
         )
 
