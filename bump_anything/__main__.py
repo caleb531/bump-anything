@@ -106,11 +106,11 @@ def bump_version_for_file(version_specifier, file_path):
 # Find files in the current project (according to the project type) that
 # include version information
 def get_default_file_paths():
-    return (
+    return [
         file_name
         for file_name in get_auto_detectable_file_names()
         if os.path.exists(file_name)
-    )
+    ]
 
 
 def version_specifier(arg_value):
@@ -134,18 +134,30 @@ def parse_cli_args():
         type=os.path.expanduser,
         default=get_default_file_paths(),
     )
+    parser.add_argument("--no-commit", action="store_true")
+    parser.add_argument("--no-tag", action="store_true")
     return parser.parse_args()
 
 
 def main():
     args = parse_cli_args()
-    changed_version = False
+    changed_any_version = False
+    changed_file_paths = []
+    print(args)
     for file_path in args.file_paths:
-        changed_version = changed_version or bump_version_for_file(
+        changed_version = bump_version_for_file(
             file_path=file_path, version_specifier=args.version_specifier
         )
-    if not changed_version:
+        if changed_version:
+            changed_file_paths.append(file_path)
+            changed_any_version = True
+    if not changed_any_version:
         print("No files updated")
+        return
+    if not args.no_commit:
+        print("TODO: commit version bump")
+    if not args.no_commit and not args.no_tag:
+        print("TODO: tag version bump")
 
 
 if __name__ == "__main__":
