@@ -112,22 +112,22 @@ def parse_cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("version_specifier", type=version_specifier)
     parser.add_argument(
-        "file_paths", metavar="file", nargs="*", type=os.path.expanduser
+        "file_paths",
+        metavar="file",
+        nargs="*",
+        type=os.path.expanduser,
+        default=get_default_file_paths(),
     )
     return parser.parse_args()
 
 
 def main():
     args = parse_cli_args()
-    if args.file_paths:
-        file_paths = args.file_paths
-    else:
-        file_paths = get_default_file_paths()
-    if not file_paths:
+    if not args.file_paths:
         print("cannot locate file(s) to bump", file=sys.stderr)
         sys.exit(1)
     changed_version = False
-    for file_path in file_paths:
+    for file_path in args.file_paths:
         try:
             changed_version = changed_version or bump_version_for_file(
                 file_path=file_path, version_specifier=args.version_specifier
