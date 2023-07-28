@@ -11,7 +11,9 @@ different types of projects.
 ## Features
 
 - Bump the version number in any arbitrary file
-- Supports most project types (if no paths are supplied, automatically detects `package.json` in Node, `setup.py` in Python, WordPress themes, etc.)
+- Supports most project types (if no paths are supplied, automatically detects
+  `package.json` in Node, `setup.py` or `pyproject.toml` in Python, `style.css`
+  for WordPress themes, etc.)
 
 ## Installation
 
@@ -49,3 +51,12 @@ field in each file will be updated.
 ```
 bump minor subdir/myfile1.txt subdir/myfile2.txt
 ```
+
+## Auto-Detected Files
+
+- `package.json` (Node)
+- `package-lock.json` (Node)
+- `setup.py` (Python)
+- `pyproject.toml` (Python)
+- `style.css` (WordPress Theme)
+- `<cwd name>.php` (WordPress Plugin)
