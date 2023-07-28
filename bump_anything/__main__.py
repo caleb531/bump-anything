@@ -98,6 +98,8 @@ def get_default_file_paths():
 
 
 def version_specifier(arg_value):
+    # Strip out 'v' prefix if included in the version specifier
+    arg_value = re.sub(r"^v", "", arg_value)
     if arg_value in INCREMENT_TYPES or semver.Version.is_valid(arg_value):
         return arg_value
     else:
