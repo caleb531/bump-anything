@@ -24,9 +24,9 @@ pip3 install bump-anything
 
 ## Usage
 
-Bump Anything exposes a `bump` command to your shell. The only required argument
-is a keyword indicating how you want to increment each version. It can be either
-`major`, `minor`, or `patch`.
+Bump Anything exposes to your shell a `bump-anything` command (also aliased to
+`bump`). The only required argument is a keyword indicating how you want to
+increment each version. It can be either `major`, `minor`, or `patch`.
 
 
 ```
