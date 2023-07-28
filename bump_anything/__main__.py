@@ -62,23 +62,36 @@ def replace_version(version_specifier, version_match):
     return "".join((version_match[1], version_specifier, version_match[5]))
 
 
+# Replace the version in the given file contents with the version matching the
+# given version specifier
+def replace_version_in_file_contents(file_contents, version_specifier):
+    version_matches = re.search(VERSION_PATT, file_contents)
+    if not version_matches:
+        return (None, None, None)
+    old_version = version_matches.group("version")
+    new_version = bump_version(old_version, version_specifier)
+    new_file_contents = re.sub(
+        VERSION_PATT,
+        partial(replace_version, new_version),
+        file_contents,
+        flags=re.IGNORECASE,
+        count=1,
+    )
+    return (old_version, new_version, new_file_contents)
+
+
 # Locate the version number in the specified file and increment it
 def bump_version_for_file(version_specifier, file_path):
     try:
         with open(file_path, "r+") as file:
             file_contents = file.read()
-            version_matches = re.search(VERSION_PATT, file_contents)
-            if not version_matches:
+            (
+                old_version,
+                new_version,
+                new_file_contents,
+            ) = replace_version_in_file_contents(file_contents, version_specifier)
+            if not old_version:
                 return False
-            old_version = version_matches.group("version")
-            new_version = bump_version(old_version, version_specifier)
-            new_file_contents = re.sub(
-                VERSION_PATT,
-                partial(replace_version, new_version),
-                file_contents,
-                flags=re.IGNORECASE,
-                count=1,
-            )
             if new_file_contents == file_contents:
                 return False
             file.truncate(0)
