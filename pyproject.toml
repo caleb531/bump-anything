@@ -24,6 +24,7 @@ changelog = "https://github.com/caleb531/bump-anything/releases"
 
 [project.scripts]
 bump = "bump:main"
+bump-anything = "bump:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
