@@ -13,7 +13,7 @@ import semver
 # within any given file of any type
 VERSION_PATT = r"({key}\s*[=:]\s*([\"\']?)){value}(\3\s*)".format(
     key=r'(["\']?)version\2',
-    value=r"(?P<version>(?P<semver>\d+\.\d+\.\d+)[a-z0-9\-\+\.]*)",
+    value=r"(?P<version>\d+\.\d+\.\d+[a-z0-9\-\+\.]*)",
 )
 
 
@@ -48,31 +48,33 @@ def bump_version(version, increment_type):
 
 # The callback function for the substitution call that locates and increments
 # the version in-place
-def replace_version(increment_type, file_path, version_match):
-    old_version = version_match.group("version")
-    semantic_version = version_match.group("semver")
-    new_version = bump_version(semantic_version, increment_type)
-    print("{}: {} -> {}".format(file_path, old_version, new_version))
-    return "".join((version_match[1], new_version, version_match[6]))
+def replace_version(version_specifier, version_match):
+    return "".join((version_match[1], version_specifier, version_match[5]))
 
 
 # Locate the version number in the specified file and increment it
 def bump_version_for_file(increment_type, file_path):
     with open(file_path, "r+") as file:
         file_contents = file.read()
+        version_matches = re.search(VERSION_PATT, file_contents)
+        if not version_matches:
+            print("{}: could not find version info".format(file_path), file=sys.stderr)
+            return
+        old_version = version_matches.group("version")
+        new_version = bump_version(old_version, increment_type)
         new_file_contents = re.sub(
             VERSION_PATT,
-            partial(replace_version, increment_type, file_path),
+            partial(replace_version, new_version),
             file_contents,
             flags=re.IGNORECASE,
             count=1,
         )
-        if new_file_contents != file_contents:
-            file.truncate(0)
-            file.seek(0)
-            file.write(new_file_contents)
-        else:
-            print("{}: could not find version info".format(file_path), file=sys.stderr)
+        if new_file_contents == file_contents:
+            return
+        file.truncate(0)
+        file.seek(0)
+        file.write(new_file_contents)
+        print("{}: {} -> {}".format(file_path, old_version, new_version))
 
 
 # Find files in the current project (according to the project type) that
