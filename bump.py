@@ -97,7 +97,7 @@ def parse_cli_args():
 def main():
     args = parse_cli_args()
     if args.file_paths:
-        file_paths = get_default_file_paths
+        file_paths = args.file_paths
     else:
         file_paths = get_default_file_paths()
     if not args.file_paths:
