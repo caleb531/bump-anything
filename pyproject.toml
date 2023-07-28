@@ -23,7 +23,7 @@ repository = "https://github.com/caleb531/bump-anything"
 changelog = "https://github.com/caleb531/bump-anything/releases"
 
 [project.scripts]
-bump = "bump.main:main"
+bump = "bump:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
