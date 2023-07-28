@@ -49,7 +49,7 @@ file paths whose versions to bump. Only the first occurrence of the version
 field in each file will be updated.
 
 ```
-bump minor subdir/myfile1.txt subdir/myfile2.txt
+bump minor subdir/myfile1.json subdir/myfile2.toml
 ```
 
 ## Auto-Detected Files
