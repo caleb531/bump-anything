@@ -11,7 +11,7 @@ maintainers = [
     {name = 'Caleb Evans', email = 'caleb@calebevans.me'}
 ]
 license = {file = 'LICENSE.txt'}
-keywords = ["semver", "semantic", "version", "bump", "increment"]
+keywords = ["semver", "semantic", "version", "versioning", "bump", "increment"]
 dependencies=[
     "semver >= 3"
 ]
