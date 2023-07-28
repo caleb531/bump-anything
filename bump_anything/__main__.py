@@ -16,6 +16,9 @@ VERSION_PATT = r"({key}\s*[=:]\s*([\"\']?)){value}(\3\s*)".format(
     value=r"(?P<version>\d+\.\d+\.\d+[a-z0-9\-\+\.]*)",
 )
 
+# The valid types of increments you could make to a semantic version
+INCREMENT_TYPES = {"major", "minor", "patch", "prerelease"}
+
 
 def get_auto_detectable_file_names():
     # Get the name of the project directory
@@ -37,15 +40,20 @@ def get_auto_detectable_file_names():
 
 # Increment the major, minor, or patch part of the given version string and
 # return the incremented version
-def bump_version(version, increment_type):
-    if increment_type == "major":
+def bump_version(version, version_specifier):
+    if version_specifier == "major":
         return semver.bump_major(version)
-    elif increment_type == "minor":
+    elif version_specifier == "minor":
         return semver.bump_minor(version)
-    elif increment_type == "patch":
+    elif version_specifier == "patch":
         return semver.bump_patch(version)
-    elif increment_type == "prerelease":
+    elif version_specifier == "prerelease":
         return semver.bump_prerelease(version)
+    else:
+        # If we are not incrementing the version using one of the above
+        # commands, we can assume the version specified is the explicit new
+        # version to use
+        return version_specifier
 
 
 # The callback function for the substitution call that locates and increments
@@ -55,7 +63,7 @@ def replace_version(version_specifier, version_match):
 
 
 # Locate the version number in the specified file and increment it
-def bump_version_for_file(increment_type, file_path):
+def bump_version_for_file(version_specifier, file_path):
     with open(file_path, "r+") as file:
         file_contents = file.read()
         version_matches = re.search(VERSION_PATT, file_contents)
@@ -63,7 +71,7 @@ def bump_version_for_file(increment_type, file_path):
             print("{}: could not find version info".format(file_path), file=sys.stderr)
             return
         old_version = version_matches.group("version")
-        new_version = bump_version(old_version, increment_type)
+        new_version = bump_version(old_version, version_specifier)
         new_file_contents = re.sub(
             VERSION_PATT,
             partial(replace_version, new_version),
@@ -89,11 +97,16 @@ def get_default_file_paths():
     )
 
 
+def version_specifier(arg_value):
+    if arg_value in INCREMENT_TYPES or semver.Version.is_valid(arg_value):
+        return arg_value
+    else:
+        raise argparse.ArgumentTypeError("invalid version specifier (must be )")
+
+
 def parse_cli_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "increment_type", choices=("major", "minor", "patch", "prerelease")
-    )
+    parser.add_argument("version_specifier", type=version_specifier)
     parser.add_argument(
         "file_paths", metavar="file", nargs="*", type=os.path.expanduser
     )
@@ -112,7 +125,7 @@ def main():
     for file_path in file_paths:
         try:
             bump_version_for_file(
-                file_path=file_path, increment_type=args.increment_type
+                file_path=file_path, version_specifier=args.version_specifier
             )
         except FileNotFoundError:
             print("{}: file not found".format(file_path), file=sys.stderr)
