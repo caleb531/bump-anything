@@ -123,9 +123,6 @@ def parse_cli_args():
 
 def main():
     args = parse_cli_args()
-    if not args.file_paths:
-        print("cannot locate file(s) to bump", file=sys.stderr)
-        sys.exit(1)
     changed_version = False
     for file_path in args.file_paths:
         try:
