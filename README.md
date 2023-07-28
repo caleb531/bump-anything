@@ -1,6 +1,6 @@
 # Bump Anything
 
-*Copyright 2019 Caleb Evans*  
+*Copyright 2019-2023 Caleb Evans*  
 *Released under the MIT license*
 
 Bump Anything is a command-line utility for incrementing the version  It serves
