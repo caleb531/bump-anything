@@ -64,27 +64,30 @@ def replace_version(version_specifier, version_match):
 
 # Locate the version number in the specified file and increment it
 def bump_version_for_file(version_specifier, file_path):
-    with open(file_path, "r+") as file:
-        file_contents = file.read()
-        version_matches = re.search(VERSION_PATT, file_contents)
-        if not version_matches:
-            return False
-        old_version = version_matches.group("version")
-        new_version = bump_version(old_version, version_specifier)
-        new_file_contents = re.sub(
-            VERSION_PATT,
-            partial(replace_version, new_version),
-            file_contents,
-            flags=re.IGNORECASE,
-            count=1,
-        )
-        if new_file_contents == file_contents:
-            return False
-        file.truncate(0)
-        file.seek(0)
-        file.write(new_file_contents)
-        print("{}: {} -> {}".format(file_path, old_version, new_version))
-        return True
+    try:
+        with open(file_path, "r+") as file:
+            file_contents = file.read()
+            version_matches = re.search(VERSION_PATT, file_contents)
+            if not version_matches:
+                return False
+            old_version = version_matches.group("version")
+            new_version = bump_version(old_version, version_specifier)
+            new_file_contents = re.sub(
+                VERSION_PATT,
+                partial(replace_version, new_version),
+                file_contents,
+                flags=re.IGNORECASE,
+                count=1,
+            )
+            if new_file_contents == file_contents:
+                return False
+            file.truncate(0)
+            file.seek(0)
+            file.write(new_file_contents)
+            print("{}: {} -> {}".format(file_path, old_version, new_version))
+            return True
+    except FileNotFoundError:
+        print("{}: file not found".format(file_path), file=sys.stderr)
 
 
 # Find files in the current project (according to the project type) that
@@ -125,12 +128,9 @@ def main():
     args = parse_cli_args()
     changed_version = False
     for file_path in args.file_paths:
-        try:
-            changed_version = changed_version or bump_version_for_file(
-                file_path=file_path, version_specifier=args.version_specifier
-            )
-        except FileNotFoundError:
-            print("{}: file not found".format(file_path), file=sys.stderr)
+        changed_version = changed_version or bump_version_for_file(
+            file_path=file_path, version_specifier=args.version_specifier
+        )
     if not changed_version:
         print("No files updated")
 
