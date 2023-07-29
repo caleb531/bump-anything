@@ -52,7 +52,7 @@ bump 2.3.4
 ```
 
 ```sh
-bump v2.3.4 # any 'v' prefix is ignored
+bump v2.3.4 # same as `bump 2.3.4`
 ```
 
 With this syntax, Bump Anything will do its best to find the relevant files to
