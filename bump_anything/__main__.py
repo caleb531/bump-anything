@@ -124,6 +124,23 @@ def abort_if_version_mismatch(file_results):
         )
 
 
+def bump_version_for_files(file_paths, version_specifier):
+    file_results = []
+    for file_path in file_paths:
+        did_version_change, current_version, new_version = bump_version_for_file(
+            file_path=file_path, version_specifier=version_specifier
+        )
+        if did_version_change:
+            file_results.append(
+                FileResult(
+                    file_path=file_path,
+                    current_version=current_version,
+                    new_version=new_version,
+                )
+            )
+    return file_results
+
+
 def handle_git_operations(
     file_results, commit_message, tag_name=None, should_tag=False
 ):
@@ -172,22 +189,8 @@ def parse_cli_args():
 
 def main():
     args = parse_cli_args()
-    did_any_version_change = False
-    file_results = []
-    for file_path in args.file_paths:
-        did_version_change, current_version, new_version = bump_version_for_file(
-            file_path=file_path, version_specifier=args.version_specifier
-        )
-        if did_version_change:
-            file_results.append(
-                FileResult(
-                    file_path=file_path,
-                    current_version=current_version,
-                    new_version=new_version,
-                )
-            )
-            did_any_version_change = True
-    if not did_any_version_change:
+    file_results = bump_version_for_files(args.file_paths, args.version_specifier)
+    if not file_results:
         print("No files updated")
         return
     if not args.no_commit:
