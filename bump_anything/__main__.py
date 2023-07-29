@@ -19,8 +19,14 @@ VERSION_PATT = r"({key}\s*[=:]\s*([\"\']?)){value}(\3\s*)".format(
     value=r"(?P<version>\d+\.\d+\.\d+[a-z0-9\-\+\.]*)",
 )
 
-# The valid types of increments you could make to a semantic version
-INCREMENT_TYPES = {"major", "minor", "patch", "prerelease"}
+# The valid types of increments you could make to a semantic version, and the
+# functions they map to
+INCREMENT_TYPES = {
+    "major": semver.bump_major,
+    "minor": semver.bump_minor,
+    "patch": semver.bump_patch,
+    "prerelease": semver.bump_prerelease,
+}
 
 
 def get_auto_detectable_file_names():
@@ -44,14 +50,8 @@ def get_auto_detectable_file_names():
 # Increment the major, minor, or patch part of the given version string and
 # return the incremented version
 def bump_version(version, version_specifier):
-    if version_specifier == "major":
-        return semver.bump_major(version)
-    elif version_specifier == "minor":
-        return semver.bump_minor(version)
-    elif version_specifier == "patch":
-        return semver.bump_patch(version)
-    elif version_specifier == "prerelease":
-        return semver.bump_prerelease(version)
+    if version_specifier in INCREMENT_TYPES.keys():
+        return INCREMENT_TYPES[version_specifier](version)
     else:
         # If we are not incrementing the version using one of the above
         # commands, we can assume the version specified is the explicit new
@@ -145,7 +145,7 @@ def handle_git_operations(
 def version_specifier(arg_value):
     # Strip out 'v' prefix if included in the version specifier
     arg_value = re.sub(r"^v", "", arg_value)
-    if arg_value in INCREMENT_TYPES or semver.Version.is_valid(arg_value):
+    if arg_value in INCREMENT_TYPES.keys() or semver.Version.is_valid(arg_value):
         return arg_value
     else:
         raise argparse.ArgumentTypeError(
