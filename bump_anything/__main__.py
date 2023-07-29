@@ -127,6 +127,8 @@ def abort_if_version_mismatch(file_results):
 def handle_git_operations(
     file_results, commit_message, tag_name=None, should_tag=False
 ):
+    if not git.is_in_git_repository():
+        return
     abort_if_version_mismatch(file_results)
     changed_result_paths = [result.file_path for result in file_results]
     git.add(changed_result_paths)
