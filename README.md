@@ -47,6 +47,14 @@ bump patch # 1.2.3 -> 1.2.4
 bump prerelease # 1.2.3-beta.1 -> 1.2.3-beta.2
 ```
 
+```sh
+bump 2.3.4
+```
+
+```sh
+bump v2.3.4 # any 'v' prefix is ignored
+```
+
 With this syntax, Bump Anything will do its best to find the relevant files to
 bump. However, Bump Anything can also accept an optional list of one or more
 file paths whose versions to bump. Only the first occurrence of the version
