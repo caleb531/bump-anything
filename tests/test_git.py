@@ -76,5 +76,6 @@ def test_auto_commit_auto_tag(out):
             run_git_command("show", "-s", "--format=%B").strip(),
         )
         case.assertEqual(
-            f"v{new_version}", run_git_command("describe", "--tags").strip()
+            f"v{new_version}",
+            run_git_command("describe", "--tags", "--exact-match").strip(),
         )
