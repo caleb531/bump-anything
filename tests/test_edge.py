@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import unittest
+from unittest.mock import patch
 
 from nose2.tools.decorators import with_setup, with_teardown
 
@@ -44,3 +45,14 @@ def test_no_version_found(out):
         )
         bump.main()
         case.assertIn("No files updated", out.getvalue())
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
+@redirect_stdout
+@redirect_stderr
+def test_invalid_version_specifier(err, out):
+    with use_cli_args("1.2.3_1"):
+        with case.assertRaises(SystemExit):
+            bump.main()
+        case.assertIn("invalid version specifier", err.getvalue())
