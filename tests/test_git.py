@@ -106,3 +106,32 @@ def test_auto_commit_no_tag(out):
             "fatal",
             run_git_command("describe", "--tags", "--exact-match").strip(),
         )
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
+@redirect_stdout
+def test_auto_commit_existing_tag(out):
+    """should auto-commit but not tag release due to existing tag"""
+    file_name = "package.json"
+    old_version = "0.8.0"
+    new_version = "1.0.0"
+    file_contents = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(new_version):
+        create_mock_file(file_name, file_contents)
+        create_mock_file(file_name, file_contents)
+        init_git_repo()
+        # Tag the initial commit created in init_git_repo()
+        run_git_command("tag", f"v{new_version}")
+        bump.main()
+        case.assertEqual(
+            f"Prepare v{new_version} release",
+            run_git_command("show", "-s", "--format=%B").strip(),
+        )
+        case.assertIn(
+            "fatal",
+            run_git_command("describe", "--tags", "--exact-match").strip(),
+        )

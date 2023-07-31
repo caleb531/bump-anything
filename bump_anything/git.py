@@ -18,7 +18,9 @@ def is_in_git_repository():
 def run_git_command(subcommand, *args):
     try:
         print(
-            subprocess.check_output(["git", subcommand, *args]).decode("utf-8"),
+            subprocess.check_output(
+                ["git", subcommand, *args], stderr=subprocess.STDOUT, text=True
+            ),
             end="",
         )
         return True
