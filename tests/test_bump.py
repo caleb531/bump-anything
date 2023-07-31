@@ -19,6 +19,9 @@ case = unittest.TestCase()
     (("minor", "foo.py"), "1.2.3", "1.3.0"),
     (("patch", "foo.py"), "1.2.3", "1.2.4"),
     (("prerelease", "foo.py"), "1.2.3-beta.4", "1.2.3-beta.5"),
+    (("4.5.6", "foo.py"), "1.2.3-beta.4", "4.5.6"),
+    (("7.8.9-alpha.1", "foo.py"), "1.2.3-beta.4", "7.8.9-alpha.1"),
+    (("7.8.9+post.1", "foo.py"), "1.2.3-beta.4", "7.8.9+post.1"),
 )
 @redirect_stdout
 def test_bump_explicit_file(out, cli_args, old_version, new_version):
