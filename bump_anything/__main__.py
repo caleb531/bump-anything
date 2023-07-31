@@ -199,7 +199,7 @@ def main():
         new_version = file_results[0].new_version
         handle_git_operations(
             file_results=file_results,
-            commit_message=args.commit_message or f"Prepare {new_version} release",
+            commit_message=args.commit_message or f"Prepare v{new_version} release",
             tag_name=args.tag_name or f"v{new_version}",
             should_tag=not args.no_tag,
         )

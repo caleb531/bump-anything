@@ -39,4 +39,13 @@ def read_mock_file(mock_file_name):
 
 
 def run_git_command(*git_args):
-    return subprocess.check_output(["git", *git_args])
+    return subprocess.check_output(["git", *git_args]).decode("utf-8")
+
+
+def init_git_repo():
+    run_git_command("init")
+    run_git_command("config", "commit.gpgsign", "false")
+    run_git_command("config", "user.name", "Test User")
+    run_git_command("config", "user.email", "user@example.com")
+    run_git_command("add", "-A")
+    run_git_command("commit", "-m", "Initial commit")

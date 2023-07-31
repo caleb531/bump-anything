@@ -5,7 +5,14 @@ import unittest
 from nose2.tools.decorators import with_setup, with_teardown
 
 import bump_anything.__main__ as bump
-from tests import create_mock_file, read_mock_file, run_git_command, set_up, tear_down
+from tests import (
+    create_mock_file,
+    init_git_repo,
+    read_mock_file,
+    run_git_command,
+    set_up,
+    tear_down,
+)
 from tests.utils import redirect_stderr, redirect_stdout, use_cli_args
 
 case = unittest.TestCase()
@@ -36,9 +43,36 @@ def test_version_mismatch(err, out):
     with use_cli_args(increment):
         create_mock_file(file_name_1, file_contents_1)
         create_mock_file(file_name_2, file_contents_2)
-        run_git_command("init")
+        init_git_repo()
         with case.assertRaises(SystemExit):
             bump.main()
         case.assertIn(f'"version": {new_version_1}\n', read_mock_file(file_name_1))
         case.assertIn(f'"version": {new_version_2}\n', read_mock_file(file_name_2))
         case.assertIn("abort", err.getvalue().lower())
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
+@redirect_stdout
+def test_auto_commit_auto_tag(out):
+    """should auto-commit and auto-tag release with Git after bumping version"""
+    file_name = "package.json"
+    old_version = "1.2.3"
+    increment = "minor"
+    new_version = "1.3.0"
+    file_contents = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(increment):
+        create_mock_file(file_name, file_contents)
+        create_mock_file(file_name, file_contents)
+        init_git_repo()
+        bump.main()
+        case.assertEqual(
+            f"Prepare v{new_version} release",
+            run_git_command("show", "-s", "--format=%B").strip(),
+        )
+        case.assertEqual(
+            f"v{new_version}", run_git_command("describe", "--tags").strip()
+        )
