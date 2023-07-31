@@ -50,6 +50,34 @@ def test_bump_explicit_file(out, cli_args, old_version, new_version):
 
 @with_setup(set_up)
 @with_teardown(tear_down)
+@redirect_stdout
+def test_bump_multiple_files(out):
+    """should bump version for various cases, given an explicit file path"""
+    file_name_1 = "package.json"
+    file_name_2 = "package-lock.json"
+    old_version = "1.2.3"
+    new_version = "4.5.6"
+    file_contents_1 = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    file_contents_2 = f"""{{
+        "lockfileVersion": 1,
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(new_version):
+        create_mock_file(file_name_1, file_contents_1)
+        create_mock_file(file_name_2, file_contents_2)
+        bump.main()
+        case.assertIn(f"{file_name_1}: {old_version} -> {new_version}", out.getvalue())
+        case.assertIn(f"{file_name_2}: {old_version} -> {new_version}", out.getvalue())
+        case.assertIn(f'"version": {new_version}\n', read_mock_file(file_name_1))
+        case.assertIn(f'"version": {new_version}\n', read_mock_file(file_name_2))
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
 @params(
     # Set the version to the same version
     (("1.2.3", "foo.py"), "1.2.3", "1.2.3"),
