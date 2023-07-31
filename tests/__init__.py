@@ -4,6 +4,7 @@
 import os
 import os.path
 import shutil
+import subprocess
 import tempfile
 
 temp_dir_path = tempfile.gettempdir()
@@ -35,3 +36,7 @@ def create_mock_file(mock_file_name, file_contents):
 def read_mock_file(mock_file_name):
     with open(os.path.join(test_dir_path, mock_file_name), "r") as mock_file:
         return mock_file.read()
+
+
+def run_git_command(*git_args):
+    return subprocess.check_output(["git", *git_args])
