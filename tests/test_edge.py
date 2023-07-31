@@ -17,6 +17,7 @@ case = unittest.TestCase()
 @redirect_stdout
 @redirect_stderr
 def test_nonexistent_file_explicit(err, out):
+    """should indicate if the specified file does not exist"""
     with use_cli_args("major", "foo.py"):
         bump.main()
         case.assertIn("foo.py: file not found", err.getvalue())
@@ -27,6 +28,8 @@ def test_nonexistent_file_explicit(err, out):
 @with_teardown(tear_down)
 @redirect_stdout
 def test_nonexistent_file_implicit(out):
+    """should indicate if no files were specified and none of the default files
+    were found"""
     with use_cli_args("major"):
         bump.main()
         case.assertIn("No files updated", out.getvalue())
@@ -36,6 +39,7 @@ def test_nonexistent_file_implicit(out):
 @with_teardown(tear_down)
 @redirect_stdout
 def test_no_version_found(out):
+    """should indicate when no version field was found in the specified file"""
     with use_cli_args("major", "foo.py"):
         create_mock_file(
             "foo.py",
@@ -52,6 +56,8 @@ def test_no_version_found(out):
 @redirect_stdout
 @redirect_stderr
 def test_invalid_version_specifier(err, out):
+    """should throw an error if supplied version specifier is not a valid
+    semantic version or increment type"""
     with use_cli_args("1.2.3_1"):
         with case.assertRaises(SystemExit):
             bump.main()

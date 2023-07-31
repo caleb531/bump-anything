@@ -32,6 +32,7 @@ case = unittest.TestCase()
 )
 @redirect_stdout
 def test_bump_explicit_file(out, cli_args, old_version, new_version):
+    """should bump version for various cases, given an explicit file path"""
     file_name = cli_args[-1]
     file_contents = f"""
     name = "foo"
@@ -55,6 +56,7 @@ def test_bump_explicit_file(out, cli_args, old_version, new_version):
 )
 @redirect_stdout
 def test_no_change(out, cli_args, old_version, new_version):
+    """should not modify file if same version is given"""
     file_name = cli_args[-1]
     file_contents = f"""
     name = "foo"
