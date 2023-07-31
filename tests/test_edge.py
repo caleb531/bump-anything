@@ -15,11 +15,11 @@ case = unittest.TestCase()
 @with_teardown(tear_down)
 @redirect_stdout
 @redirect_stderr
-def test_nonexistent_file_explicit(out, err):
+def test_nonexistent_file_explicit(err, out):
     with use_cli_args("major", "foo.py"):
         bump.main()
-        case.assertIn("foo.py: file not found", out.getvalue())
-        case.assertNotIn("foo.py: file not found", err.getvalue())
+        case.assertIn("foo.py: file not found", err.getvalue())
+        case.assertNotIn("foo.py: file not found", out.getvalue())
 
 
 @with_setup(set_up)
