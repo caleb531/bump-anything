@@ -2,12 +2,17 @@
 # coding=utf-8
 
 import sys
+from contextlib import contextmanager
 from functools import wraps
 from io import StringIO
+from unittest.mock import patch
+
+import bump_anything.__main__ as bump
 
 
 def redirect_stdout(func):
-    """temporarily redirect stdout to new Unicode output stream"""
+    """a decorator to temporarily redirect stdout to new Unicode output
+    stream"""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -23,7 +28,8 @@ def redirect_stdout(func):
 
 
 def redirect_stderr(func):
-    """temporarily redirect stderr to new Unicode output stream"""
+    """a decorator to temporarily redirect stderr to new Unicode output
+    stream"""
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -36,3 +42,11 @@ def redirect_stderr(func):
             sys.stderr = original_stderr
 
     return wrapper
+
+
+@contextmanager
+def use_cli_args(*cli_args):
+    """a context manager use the given arguments to the bump CLI utility"""
+
+    with patch("sys.argv", [bump.__file__, *cli_args]):
+        yield

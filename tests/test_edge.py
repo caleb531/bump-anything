@@ -7,7 +7,7 @@ from nose2.tools.decorators import with_setup, with_teardown
 
 import bump_anything.__main__ as bump
 from tests import create_mock_file, set_up, tear_down
-from tests.decorators import redirect_stderr, redirect_stdout
+from tests.utils import redirect_stderr, redirect_stdout
 
 case = unittest.TestCase()
 
