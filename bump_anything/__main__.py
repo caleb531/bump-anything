@@ -122,6 +122,7 @@ def abort_if_version_mismatch(file_results):
         print(
             "Aborting commit because not all bumped versions are equal", file=sys.stderr
         )
+        sys.exit()
 
 
 def bump_version_for_files(file_paths, version_specifier):

@@ -37,7 +37,8 @@ def test_version_mismatch(err, out):
         create_mock_file(file_name_1, file_contents_1)
         create_mock_file(file_name_2, file_contents_2)
         run_git_command("init")
-        bump.main()
+        with case.assertRaises(SystemExit):
+            bump.main()
         case.assertIn(f'"version": {new_version_1}\n', read_mock_file(file_name_1))
         case.assertIn(f'"version": {new_version_2}\n', read_mock_file(file_name_2))
         case.assertIn("abort", err.getvalue().lower())
