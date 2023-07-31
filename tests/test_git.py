@@ -9,11 +9,13 @@ from tests import (
     create_mock_file,
     init_git_repo,
     read_mock_file,
+    redirect_stderr,
+    redirect_stdout,
     run_git_command,
     set_up,
     tear_down,
+    use_cli_args,
 )
-from tests.utils import redirect_stderr, redirect_stdout, use_cli_args
 
 case = unittest.TestCase()
 

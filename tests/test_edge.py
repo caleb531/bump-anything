@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 
 import unittest
-from unittest.mock import patch
 
 from nose2.tools.decorators import with_setup, with_teardown
 
 import bump_anything.__main__ as bump
-from tests import create_mock_file, set_up, tear_down
-from tests.utils import redirect_stderr, redirect_stdout, use_cli_args
+from tests import (
+    create_mock_file,
+    redirect_stderr,
+    redirect_stdout,
+    set_up,
+    tear_down,
+    use_cli_args,
+)
 
 case = unittest.TestCase()
 
