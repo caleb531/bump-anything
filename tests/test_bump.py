@@ -33,14 +33,38 @@ case = unittest.TestCase()
 @redirect_stdout
 def test_bump_explicit_file(out, cli_args, old_version, new_version):
     file_name = cli_args[-1]
+    file_contents = f"""
+    name = "foo"
+    version = {old_version}
+    """
     with use_cli_args(*cli_args):
         create_mock_file(
             file_name,
-            f"""
-            name = "foo"
-            version = {old_version}
-            """,
+            file_contents,
         )
         bump.main()
         case.assertIn(f"{file_name}: {old_version} -> {new_version}", out.getvalue())
         case.assertIn(f"version = {new_version}\n", read_mock_file(file_name))
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
+@params(
+    # Set the version to the same version
+    (("1.2.3", "foo.py"), "1.2.3", "1.2.3"),
+)
+@redirect_stdout
+def test_no_change(out, cli_args, old_version, new_version):
+    file_name = cli_args[-1]
+    file_contents = f"""
+    name = "foo"
+    version = {old_version}
+    """
+    with use_cli_args(*cli_args):
+        create_mock_file(
+            file_name,
+            file_contents,
+        )
+        bump.main()
+        case.assertIn("No files updated", out.getvalue())
+        case.assertEqual(file_contents, read_mock_file(file_name))
