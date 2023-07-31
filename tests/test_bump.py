@@ -15,12 +15,19 @@ case = unittest.TestCase()
 @with_setup(set_up)
 @with_teardown(tear_down)
 @params(
+    # Bump the major part of the version
     (("major", "foo.py"), "1.2.3", "2.0.0"),
+    # Bump the minor part of the version
     (("minor", "foo.py"), "1.2.3", "1.3.0"),
+    # Bump the patch part of the version
     (("patch", "foo.py"), "1.2.3", "1.2.4"),
+    # Bump the prerelease part of the version
     (("prerelease", "foo.py"), "1.2.3-beta.4", "1.2.3-beta.5"),
+    # Set the version to an explicit new version
     (("4.5.6", "foo.py"), "1.2.3-beta.4", "4.5.6"),
+    # Set the version to an explicit new version with prerelease part
     (("7.8.9-alpha.1", "foo.py"), "1.2.3-beta.4", "7.8.9-alpha.1"),
+    # Set the version to an explicit new version with prerelease part
     (("7.8.9+post.1", "foo.py"), "1.2.3-beta.4", "7.8.9+post.1"),
 )
 @redirect_stdout
