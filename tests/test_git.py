@@ -2,6 +2,7 @@
 
 import unittest
 
+from nose2.tools import params
 from nose2.tools.decorators import with_setup, with_teardown
 
 import bump_anything.__main__ as bump
@@ -139,8 +140,9 @@ def test_auto_commit_existing_tag(out):
 
 @with_setup(set_up)
 @with_teardown(tear_down)
+@params("--no-commit", "-n")
 @redirect_stdout
-def test_no_commit(out):
+def test_no_commit(out, no_commit_flag):
     """should not commit when --no-commit is supplied"""
     file_name = "package.json"
     old_version = "0.8.0"
@@ -149,7 +151,7 @@ def test_no_commit(out):
         "name": "foo",
         "version": {old_version}
     }}"""
-    with use_cli_args(new_version, "--no-commit"):
+    with use_cli_args(new_version, no_commit_flag):
         create_mock_file(file_name, file_contents)
         create_mock_file(file_name, file_contents)
         init_git_repo()
