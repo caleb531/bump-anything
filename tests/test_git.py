@@ -61,13 +61,12 @@ def test_auto_commit_auto_tag(out):
     """should auto-commit and auto-tag release with Git after bumping version"""
     file_name = "package.json"
     old_version = "1.2.3"
-    increment = "minor"
     new_version = "1.3.0"
     file_contents = f"""{{
         "name": "foo",
         "version": {old_version}
     }}"""
-    with use_cli_args(increment):
+    with use_cli_args(new_version):
         create_mock_file(file_name, file_contents)
         create_mock_file(file_name, file_contents)
         init_git_repo()
