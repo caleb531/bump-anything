@@ -63,7 +63,7 @@ bump. However, Bump Anything can also accept an optional list of one or more
 file paths whose versions to bump. Only the first occurrence of the version
 field in each file will be updated.
 
-```
+```sh
 bump minor subdir/myfile1.json subdir/myfile2.toml
 ```
 
