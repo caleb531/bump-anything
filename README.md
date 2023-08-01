@@ -3,6 +3,9 @@
 *Copyright 2019-2023 Caleb Evans*  
 *Released under the MIT license*
 
+[![tests](https://github.com/caleb531/bump-anything/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/bump-anything/actions/workflows/tests.yml)
+[![Coverage Status](https://coveralls.io/repos/caleb531/bump-anything/badge.svg?branch=main)](https://coveralls.io/r/caleb531/bump-anything?branch=main)
+
 Bump Anything is a command-line utility for incrementing the version  It serves
 as a more-flexible alternative to `npm version` and similar tools because
 Bump Anything can handle any arbitrary text file and has built-in support for
