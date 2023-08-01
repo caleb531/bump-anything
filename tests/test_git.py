@@ -135,3 +135,30 @@ def test_auto_commit_existing_tag(out):
             "fatal",
             run_git_command("describe", "--tags", "--exact-match").strip(),
         )
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
+@redirect_stdout
+def test_no_commit(out):
+    """should not commit when --no-commit is supplied"""
+    file_name = "package.json"
+    old_version = "0.8.0"
+    new_version = "1.0.0"
+    file_contents = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(new_version, "--no-commit"):
+        create_mock_file(file_name, file_contents)
+        create_mock_file(file_name, file_contents)
+        init_git_repo()
+        bump.main()
+        case.assertEqual(
+            "Initial commit",
+            run_git_command("show", "-s", "--format=%B").strip(),
+        )
+        case.assertIn(
+            "fatal",
+            run_git_command("describe", "--tags", "--exact-match").strip(),
+        )
