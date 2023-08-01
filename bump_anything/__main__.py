@@ -183,8 +183,10 @@ def parse_cli_args():
     )
     parser.add_argument("--no-commit", "-n", action="store_true")
     parser.add_argument("--no-tag", action="store_true")
-    parser.add_argument("--commit-message", "-m")
-    parser.add_argument("--tag-name", "-t")
+    parser.add_argument(
+        "--commit-message", "-m", default="Prepare v{new_version} release"
+    )
+    parser.add_argument("--tag-name", "-t", default="v{new_version}")
     return parser.parse_args()
 
 
@@ -199,8 +201,8 @@ def main():
         new_version = file_results[0].new_version
         handle_git_operations(
             file_results=file_results,
-            commit_message=args.commit_message or f"Prepare v{new_version} release",
-            tag_name=args.tag_name or f"v{new_version}",
+            commit_message=args.commit_message.format(new_version=new_version),
+            tag_name=args.tag_name.format(new_version=new_version),
             should_tag=not args.no_tag,
         )
 

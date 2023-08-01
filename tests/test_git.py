@@ -84,6 +84,38 @@ def test_auto_commit_auto_tag(out):
 
 @with_setup(set_up)
 @with_teardown(tear_down)
+@params(("--commit-message", "--tag-name"), ("-m", "-t"))
+@redirect_stdout
+def test_custom_commit_message_custom_tag_name(out, commit_msg_flag, tag_name_flag):
+    """should use custom commit message and custom tag name"""
+    file_name = "package.json"
+    old_version = "1.2.3"
+    new_version = "1.3.0"
+    commit_msg = "Release version {new_version}"
+    tag_name = "release-{new_version}"
+    file_contents = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(
+        new_version, commit_msg_flag, commit_msg, tag_name_flag, tag_name
+    ):
+        create_mock_file(file_name, file_contents)
+        create_mock_file(file_name, file_contents)
+        init_git_repo()
+        bump.main()
+        case.assertEqual(
+            commit_msg.format(new_version=new_version),
+            run_git_command("show", "-s", "--format=%B").strip(),
+        )
+        case.assertEqual(
+            tag_name.format(new_version=new_version),
+            run_git_command("describe", "--tags", "--exact-match").strip(),
+        )
+
+
+@with_setup(set_up)
+@with_teardown(tear_down)
 @redirect_stdout
 def test_auto_commit_no_tag(out):
     """should auto-commit but not tag release"""
