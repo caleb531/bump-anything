@@ -23,8 +23,8 @@ repository = "https://github.com/caleb531/bump-anything"
 changelog = "https://github.com/caleb531/bump-anything/releases"
 
 [project.scripts]
-bump = "bump_anything.__main__:main"
-bump-anything = "bump_anything.__main__:main"
+bump = "bumpanything.__main__:main"
+bump-anything = "bumpanything.__main__:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
@@ -45,4 +45,4 @@ exclude_lines = [
 ]
 
 # Only check coverage for source files
-include = ["bump_anything/*.py"]
+include = ["bumpanything/*.py"]

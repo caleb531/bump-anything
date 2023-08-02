@@ -12,7 +12,7 @@ from functools import wraps
 from io import StringIO
 from unittest.mock import patch
 
-import bump_anything.__main__ as bump
+import bumpanything.__main__ as bump
 
 temp_dir_path = tempfile.gettempdir()
 temp_subdir_name = "bump-test"

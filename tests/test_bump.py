@@ -5,7 +5,7 @@ import unittest
 from nose2.tools import params
 from nose2.tools.decorators import with_setup, with_teardown
 
-import bump_anything.__main__ as bump
+import bumpanything.__main__ as bump
 from tests import (
     create_mock_file,
     read_mock_file,

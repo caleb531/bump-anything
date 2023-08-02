@@ -9,8 +9,8 @@ from functools import partial
 
 import semver
 
-import bump_anything.git as git
-from bump_anything.file_result import FileResult
+import bumpanything.git as git
+from bumpanything.file_result import FileResult
 
 # The regular expression pattern used to match the version to be incremented
 # within any given file of any type
