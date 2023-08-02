@@ -67,6 +67,62 @@ field in each file will be updated.
 bump minor subdir/myfile1.json subdir/myfile2.toml
 ```
 
+### Git Integration
+
+The `bump` command will automatically create a tagged commit if the current
+directory is a Git repository. Only the files that have been modified by `bump`
+will be staged.
+
+### Custom commit message
+
+You can explicitly specify the commit message with `--commit-message` or `-m`.
+The default is `Prepare v<new_version> release`. You can use the `{new_version}`
+placeholder to represent the new version (without any prefix).
+
+```sh
+bump --commit-message 'Release v{new_version}' major
+```
+
+```sh
+bump -m 'Release v{new_version}' major
+```
+
+### Custom tag name
+
+You can explicitly specify the tag name with `--tag-name` or `-t` (default:
+`v<new_version>`). You can use the `{new_version}` placeholder to represent the
+new version (without any prefix).
+
+```sh
+bump --tag-name 'release/{new_version}' patch
+```
+
+```sh
+bump -t 'release/{new_version}' patch
+```
+
+### Disabling committing and/or tagging
+
+If you do not wish for `bump` to automatically create a commit and tag, you can
+pass the `--no-commit` flag (alias: `-n`):
+
+```sh
+bump --no-commit minor
+```
+
+```sh
+bump -n minor
+```
+
+### Disabling tagging only
+
+If you wish to disable the automatic tag creation but still create a commit, you
+can pass the `--no-tag` flag:
+
+```sh
+bump --no-tag patch
+```
+
 ## Auto-Detected Files
 
 - `package.json` (Node)
