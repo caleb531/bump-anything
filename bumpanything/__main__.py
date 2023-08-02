@@ -192,7 +192,6 @@ def parse_cli_args():
 
 def main():
     args = parse_cli_args()
-    print(args.file_paths)
     file_results = bump_version_for_files(args.file_paths, args.version_specifier)
     if not file_results:
         print("No files updated")
