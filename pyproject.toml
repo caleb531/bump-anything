@@ -28,6 +28,7 @@ bump-anything = "bumpanything.__main__:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 # Configuration for coverage.py (https://pypi.python.org/pypi/coverage)
 
