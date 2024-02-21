@@ -1,6 +1,6 @@
 # Bump Anything
 
-*Copyright 2019-2023 Caleb Evans*  
+*Copyright 2019-2024 Caleb Evans*  
 *Released under the MIT license*
 
 [![tests](https://github.com/caleb531/bump-anything/actions/workflows/tests.yml/badge.svg)](https://github.com/caleb531/bump-anything/actions/workflows/tests.yml)
