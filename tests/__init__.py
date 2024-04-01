@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import unittest
 from contextlib import contextmanager
 from functools import wraps
 from io import StringIO
@@ -19,20 +20,21 @@ temp_subdir_name = "bump-test"
 test_dir_path = os.path.join(temp_dir_path, temp_subdir_name)
 
 
-def set_up():
-    try:
-        os.makedirs(test_dir_path)
-    except shutil.Error:
-        pass
-    os.chdir(test_dir_path)
+class BumpAnythingTestCase(unittest.TestCase):
 
+    def setUp(self):
+        try:
+            os.makedirs(test_dir_path)
+        except shutil.Error:
+            pass
+        os.chdir(test_dir_path)
 
-def tear_down():
-    os.chdir(temp_dir_path)
-    try:
-        shutil.rmtree(test_dir_path)
-    except OSError:
-        pass
+    def tearDown(self):
+        os.chdir(temp_dir_path)
+        try:
+            shutil.rmtree(test_dir_path)
+        except OSError:
+            pass
 
 
 def create_mock_file(mock_file_name, file_contents):
@@ -73,7 +75,13 @@ def redirect_stdout(func):
         out = StringIO()
         try:
             sys.stdout = out
-            return func(out, *args, **kwargs)
+            # If the decorated function is a method, the `self` argument should
+            # still be first
+            if args and hasattr(args[0], "__class__"):
+                self_arg, *rest_args = args
+                return func(self_arg, out, *rest_args, **kwargs)
+            else:
+                return func(out, *args, **kwargs)
         finally:
             sys.stdout = original_stdout
 
@@ -90,7 +98,13 @@ def redirect_stderr(func):
         out = StringIO()
         try:
             sys.stderr = out
-            return func(out, *args, **kwargs)
+            # If the decorated function is a method, the `self` argument should
+            # still be first
+            if args and hasattr(args[0], "__class__"):
+                self_arg, *rest_args = args
+                return func(self_arg, out, *rest_args, **kwargs)
+            else:
+                return func(out, *args, **kwargs)
         finally:
             sys.stderr = original_stderr
 
