@@ -43,6 +43,7 @@ def get_auto_detectable_file_names():
         "{}.php".format(project_name),
         # If a Python project
         "setup.py",
+        "setup.cfg",
         "pyproject.toml",
     )
 
