@@ -128,6 +128,7 @@ bump --no-tag patch
 - `package.json` (Node)
 - `package-lock.json` (Node)
 - `setup.py` (Python)
+- `setup.cfg` (Python)
 - `pyproject.toml` (Python)
 - `style.css` (WordPress Theme)
 - `<cwd name>.php` (WordPress Plugin)
