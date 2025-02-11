@@ -45,6 +45,7 @@ def get_auto_detectable_file_names():
         "setup.py",
         "setup.cfg",
         "pyproject.toml",
+        "Cargo.toml",
     )
 
 
