@@ -131,4 +131,5 @@ bump --no-tag patch
 - `setup.cfg` (Python)
 - `pyproject.toml` (Python)
 - `style.css` (WordPress Theme)
+- `Cargo.toml` (Rust package manifest)
 - `<cwd name>.php` (WordPress Plugin)
