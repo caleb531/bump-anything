@@ -153,7 +153,10 @@ def handle_git_operations(
     changed_result_paths = [result.file_path for result in file_results]
     git.add(changed_result_paths)
     print(f"Staging {', '.join(changed_result_paths)}")
-    git.commit(commit_message)
+    did_commit = git.commit(commit_message)
+    if not did_commit:
+        print("Commit failed; aborting")
+        return
     if not should_tag:
         return
     did_tag = git.tag(tag_name)
