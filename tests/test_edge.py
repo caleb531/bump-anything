@@ -11,7 +11,6 @@ from tests import (
 
 
 class TestEdge(BumpAnythingTestCase):
-
     @redirect_stdout
     @redirect_stderr
     def test_nonexistent_file_explicit(self, err, out):

@@ -21,7 +21,6 @@ test_dir_path = os.path.join(temp_dir_path, temp_subdir_name)
 
 
 class BumpAnythingTestCase(unittest.TestCase):
-
     def setUp(self):
         try:
             os.makedirs(test_dir_path)

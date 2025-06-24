@@ -16,7 +16,6 @@ from tests import (
 
 
 class TestGit(BumpAnythingTestCase):
-
     @redirect_stdout
     @redirect_stderr
     def test_version_mismatch(self, err, out):

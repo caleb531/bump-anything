@@ -13,7 +13,6 @@ from tests import (
 
 
 class TestBump(BumpAnythingTestCase):
-
     @params(
         # Bump the major part of the version
         (("major", "foo.py"), "1.2.3", "2.0.0"),
