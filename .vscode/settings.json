@@ -1,14 +1,10 @@
 {
   "python.analysis.extraPaths": [".virtualenv"],
-  "python.formatting.provider": "black",
   "[python]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  },
-  "isort.args": [
-    "--profile", "black"
-  ]
+  }
 }
