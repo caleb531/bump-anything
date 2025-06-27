@@ -30,6 +30,22 @@ bump-anything = "bumpanything.__main__:main"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[tool.ruff]
+include = ["**/*.py"]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # pyflakes
+    "F",
+    # isort
+    "I",
+    # perflint
+    "PERF",
+]
+
 # Configuration for coverage.py (https://pypi.python.org/pypi/coverage)
 
 [tool.coverage.run]
