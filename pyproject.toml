@@ -30,6 +30,14 @@ bump-anything = "bumpanything.__main__:main"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
+[dependency-groups]
+dev = [
+    "coverage==7.2.7",
+    "nose2==0.13.0",
+    "ruff>=0.12.0",
+    "tomli==2.0.1",
+]
+
 [tool.ruff]
 include = ["**/*.py"]
 
@@ -63,11 +71,3 @@ exclude_lines = [
 
 # Only check coverage for source files
 include = ["bumpanything/*.py"]
-
-[dependency-groups]
-dev = [
-    "coverage==7.2.7",
-    "nose2==0.13.0",
-    "ruff>=0.12.0",
-    "tomli==2.0.1",
-]
