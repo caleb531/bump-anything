@@ -88,7 +88,7 @@ def replace_version_in_file_contents(file_contents, version_specifier):
 # Locate the version number in the specified file and increment it
 def bump_version_for_file(version_specifier, file_path):
     try:
-        with open(file_path, "r+") as file:
+        with open(file_path, "r+", newline="") as file:
             file_contents = file.read()
             (
                 current_version,
