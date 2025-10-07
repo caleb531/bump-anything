@@ -21,10 +21,17 @@ different types of projects.
 ## Installation
 
 Bump Anything requires Python 3.9 or newer to run, so please ensure you have it
-installed.
+installed. You can install it easily via pip, *or* using your preferred package
+manager (like uv):
 
 ```sh
+# via pip
 pip3 install bump-anything
+```
+
+```sh
+# via uv
+uv tool install bump-anything
 ```
 
 ## Usage
