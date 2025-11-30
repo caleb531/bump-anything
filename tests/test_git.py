@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from unittest.mock import patch
+
 import pytest
 
 import bumpanything.__main__ as bump
@@ -143,6 +145,32 @@ def test_auto_commit_existing_tag(capsys):
             == run_git_command("show", "-s", "--format=%B").strip()
         )
         assert "fatal" in run_git_command("describe", "--tags", "--exact-match").strip()
+
+
+def test_commit_failure_aborts_git_operations(capsys):
+    """should abort further Git operations when commit fails"""
+    file_name = "package.json"
+    old_version = "0.8.0"
+    new_version = "1.0.0"
+    file_contents = f"""{{
+        "name": "foo",
+        "version": {old_version}
+    }}"""
+    with use_cli_args(new_version):
+        create_mock_file(file_name, file_contents)
+        create_mock_file(file_name, file_contents)
+        init_git_repo()
+        with (
+            patch("bumpanything.git.commit", return_value=False) as commit_mock,
+            patch("bumpanything.git.tag") as tag_mock,
+        ):
+            bump.main()
+    captured = capsys.readouterr()
+    assert "Commit failed; aborting" in captured.out
+    assert commit_mock.called
+    assert not tag_mock.called
+    assert "Initial commit" == run_git_command("show", "-s", "--format=%B").strip()
+    assert "fatal" in run_git_command("describe", "--tags", "--exact-match").strip()
 
 
 @pytest.mark.parametrize(
